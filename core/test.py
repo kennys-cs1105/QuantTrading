@@ -32,7 +32,7 @@ import os
 
 def main():
     # data loader
-    stock_data_path = "/home/kennys/MineX/QuantTrading/dataset/沪深300-2024年1月至2025年2月数据.csv"
+    stock_data_path = "/home/kennys/MineX/QuantTrading/dataset/沪深300-2024年至今数据.csv"
     hs300_constituents_path="/home/kennys/MineX/QuantTrading/dataset/沪深300成分股.csv"
     data_loader = DataLoader(stock_data_path, hs300_constituents_path)
     
@@ -85,7 +85,7 @@ def main():
         
         display_columns = ['code', 'code_name', '信号日期', '当日收盘价', '5日均线', '20日均线', '60日均线', '当日J值', '前一日J值', '5日收益率', '10日收益率', '30日收益率']
         
-        output_path = "ma60_info.csv"
+        output_path = "ma60_up2now_info.csv"
         signals[display_columns].to_csv(output_path, index=False, encoding='utf-8-sig')
         print(f"\n交易信号明细已保存至: {os.path.abspath(output_path)}")
         
