@@ -23,7 +23,7 @@ class TradingStrategy:
     def find_trading_signals(self, df):
         """
         Find trading signals based on strategy rules:
-        1. Price above MA10
+        1. Price above MA20
         2. Find where J turns negative (D1) and then turns positive (D2)
         """
         df = df.copy()
