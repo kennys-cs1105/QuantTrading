@@ -30,18 +30,18 @@ def main():
         
         # 格式化数值列
         numeric_columns = ['D1收盘价', 'D2收盘价', 'D1-D2收益率', 
-                         'D1_5日均线', 'D1_10日均线', 'D1_60日均线',
-                         'D1_J值', 'D2_J值', 'J值差值']
+                         'D1_5日均线', 'D1_20日均线', 'D1_60日均线',
+                         'D1_J值', 'D2_J值']
         signals[numeric_columns] = signals[numeric_columns].round(2)
         
         # 设置显示列顺序
         display_columns = ['code', 'code_name', 'D1日期', 'D2日期', 
                          'D1收盘价', 'D2收盘价', 'D1-D2收益率', 
-                         'D1_5日均线', 'D1_10日均线', 'D1_60日均线',
-                         'D1_J值', 'D2_J值', 'J值差值', '持仓天数']
+                         'D1_5日均线', 'D1_20日均线', 'D1_60日均线',
+                         'D1_J值', 'D2_J值', '持仓天数']
         
         # 保存结果到CSV
-        output_path = "trading_signals_j_diff_ma10.csv"
+        output_path = "trading_signals_ma20.csv"
         signals[display_columns].to_csv(output_path, index=False, encoding='utf-8-sig')
         print(f"\n交易信号明细已保存至: {os.path.abspath(output_path)}")
         
@@ -54,7 +54,6 @@ def main():
         print(f"收益率中位数: {signals['D1-D2收益率'].median():.2f}%")
         print(f"胜率: {(signals['D1-D2收益率'] > 0).mean() * 100:.2f}%")
         print(f"平均持仓天数: {signals['持仓天数'].mean():.1f}天")
-        print(f"平均J值差值: {signals['J值差值'].mean():.2f}")
         
         print("\n=== 信号时间分布 ===")
         signals_by_month = signals.groupby(pd.to_datetime(signals['D1日期']).dt.to_period('M')).size()
@@ -64,7 +63,7 @@ def main():
         print("\n每个交易信号的详细信息:")
         pd.set_option('display.max_rows', None)
         pd.set_option('display.width', None)
-        # print(signals[display_columns].to_string(index=False))
+        print(signals[display_columns].to_string(index=False))
     else:
         print("\n未找到符合条件的交易信号")
     
