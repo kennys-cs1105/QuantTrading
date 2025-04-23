@@ -32,8 +32,8 @@ import os
 
 def main():
     # data loader
-    stock_data_path = "/home/kennys/experiment/QuantTrading/dataset/沪深300-2025年至今数据.csv"
-    hs300_constituents_path="/home/kennys/experiment/QuantTrading/dataset/沪深300成分股.csv"
+    stock_data_path = "/home/kennys/MineX/QuantTrading/dataset/沪深300-2025年至今数据.csv"
+    hs300_constituents_path="/home/kennys/MineX/QuantTrading/dataset/沪深300成分股.csv"
     data_loader = DataLoader(stock_data_path, hs300_constituents_path)
     
     stock_data = data_loader.load_stock_data()

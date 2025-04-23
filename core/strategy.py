@@ -29,14 +29,14 @@ class TradingStrategy:
         df = df.copy()
         
         # Check if price is above MA20
-        df['above_ma60'] = df['close'] > df['ma60']
+        df['above_ma20'] = df['close'] > df['ma20']
         
         # Find where J value turns negative (current J < 0 and previous J >= 0)
         df['prev_j'] = df.groupby('code')['kdj_j'].shift(1)
         df['j_turns_negative'] = (df['kdj_j'] < 0) & (df['prev_j'] >= 0)
         
         # Create trading signals with selected columns
-        signals = df[df['above_ma60'] & df['j_turns_negative']].copy()
+        signals = df[df['above_ma20'] & df['j_turns_negative']].copy()
         
         # Select and rename columns for better readability
         selected_signals = signals[[
