@@ -32,8 +32,8 @@ import os
 
 def main():
     # data loader
-    stock_data_path = "/home/kennys/MineX/QuantTrading/dataset/沪深300-2024年至今数据.csv"
-    hs300_constituents_path="/home/kennys/MineX/QuantTrading/dataset/沪深300成分股.csv"
+    stock_data_path = "/home/kennys/experiment/QuantTrading/dataset/沪深300-2025年至今数据.csv"
+    hs300_constituents_path="/home/kennys/experiment/QuantTrading/dataset/沪深300成分股.csv"
     data_loader = DataLoader(stock_data_path, hs300_constituents_path)
     
     stock_data = data_loader.load_stock_data()
@@ -65,14 +65,17 @@ def main():
         
         # 添加不同时间段的收益率到signals
         for days, returns in [(5, returns_5), (10, returns_10), (30, returns_30)]:
-            # 将returns中的日期也转换为字符串格式
-            returns['signal_date_str'] = returns['signal_date'].dt.strftime('%Y-%m-%d')
-            signals = pd.merge(signals, returns[['code', 'signal_date_str', 'return']], 
-                             left_on=['code', '信号日期_str'], 
-                             right_on=['code', 'signal_date_str'], 
-                             how='left')
-            signals = signals.rename(columns={'return': f'{days}日收益率'})
-            signals = signals.drop(['signal_date_str'], axis=1)
+            if not returns.empty:
+                # 将returns中的日期也转换为字符串格式
+                returns['signal_date_str'] = returns['signal_date'].dt.strftime('%Y-%m-%d')
+                signals = pd.merge(signals, returns[['code', 'signal_date_str', 'return']], 
+                                 left_on=['code', '信号日期_str'], 
+                                 right_on=['code', 'signal_date_str'], 
+                                 how='left')
+                signals = signals.rename(columns={'return': f'{days}日收益率'})
+                signals = signals.drop(['signal_date_str'], axis=1)
+            else:
+                signals[f'{days}日收益率'] = None
         
         # 删除临时列
         signals = signals.drop(['信号日期_str'], axis=1)
@@ -85,31 +88,29 @@ def main():
         
         display_columns = ['code', 'code_name', '信号日期', '当日收盘价', '5日均线', '20日均线', '60日均线', '当日J值', '前一日J值', '5日收益率', '10日收益率', '30日收益率']
         
-        output_path = "ma60_up2now_info.csv"
-        signals[display_columns].to_csv(output_path, index=False, encoding='utf-8-sig')
-        print(f"\n交易信号明细已保存至: {os.path.abspath(output_path)}")
+        # output_path = "ma60_up2now_info.csv"
+        # signals[display_columns].to_csv(output_path, index=False, encoding='utf-8-sig')
+        # print(f"\n交易信号明细已保存至: {os.path.abspath(output_path)}")
         
         print("\n每个交易信号的详细信息:")
         pd.set_option('display.max_rows', None)
         pd.set_option('display.width', None)
         print(signals[display_columns].to_string(index=False))
         
-        if len(returns_30) > 0:
-            print(f"\n=== 收益率统计 ===")
-            print(f"5天平均收益率: {returns_5['return'].mean():.2f}%")
-            print(f"5天收益率中位数: {returns_5['return'].median():.2f}%")
-            print(f"5天胜率: {(returns_5['return'] > 0).mean() * 100:.2f}%")
-            print(f"\n10天平均收益率: {returns_10['return'].mean():.2f}%")
-            print(f"10天收益率中位数: {returns_10['return'].median():.2f}%")
-            print(f"10天胜率: {(returns_10['return'] > 0).mean() * 100:.2f}%")
-            print(f"\n30天平均收益率: {returns_30['return'].mean():.2f}%")
-            print(f"30天收益率中位数: {returns_30['return'].median():.2f}%")
-            print(f"30天胜率: {(returns_30['return'] > 0).mean() * 100:.2f}%")
+        # 打印收益率统计信息
+        print(f"\n=== 收益率统计 ===")
+        for days, returns in [(5, returns_5), (10, returns_10), (30, returns_30)]:
+            if not returns.empty:
+                print(f"\n{days}天平均收益率: {returns['return'].mean():.2f}%")
+                print(f"{days}天收益率中位数: {returns['return'].median():.2f}%")
+                print(f"{days}天胜率: {(returns['return'] > 0).mean() * 100:.2f}%")
+            else:
+                print(f"\n{days}天收益率数据不足")
             
-            print(f"\n=== 信号时间分布 ===")
-            signals_by_month = signals.groupby(pd.to_datetime(signals['信号日期']).dt.to_period('M')).size()
-            print("\n每月信号数量:")
-            print(signals_by_month)
+        print(f"\n=== 信号时间分布 ===")
+        signals_by_month = signals.groupby(pd.to_datetime(signals['信号日期']).dt.to_period('M')).size()
+        print("\n每月信号数量:")
+        print(signals_by_month)
     
 if __name__ == "__main__":
     main()

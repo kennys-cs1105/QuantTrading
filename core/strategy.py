@@ -71,7 +71,7 @@ class TradingStrategy:
         
         for _, signal in signals.iterrows():
             code = signal['code']
-            signal_date = signal['信号日期']  # Updated to match the new column name
+            signal_date = signal['信号日期']
             signal_price = df[
                 (df['code'] == code) & 
                 (df['date'] == signal_date)
@@ -89,8 +89,6 @@ class TradingStrategy:
                 results.append({
                     'code': code,
                     'signal_date': signal_date,
-                    'entry_price': signal_price,
-                    'exit_price': future_data.iloc[-1]['close'],
                     'return': future_return
                 })
                 

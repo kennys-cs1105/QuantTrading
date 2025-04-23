@@ -5,8 +5,8 @@ import os
 
 def main():
     # data loader
-    stock_data_path = "/home/kennys/MineX/QuantTrading/dataset/沪深300-2024年至今数据.csv"
-    hs300_constituents_path="/home/kennys/MineX/QuantTrading/dataset/沪深300成分股.csv"
+    stock_data_path = "/home/kennys/experiment/QuantTrading/dataset/沪深300-2024年至今数据.csv"
+    hs300_constituents_path="/home/kennys/experiment/QuantTrading/dataset/沪深300成分股.csv"
     data_loader = DataLoader(stock_data_path, hs300_constituents_path)
     
     stock_data = data_loader.load_stock_data()
@@ -41,9 +41,9 @@ def main():
                          'D1_J值', 'D2_J值', '持仓天数']
         
         # 保存结果到CSV
-        output_path = "trading_signals_ma20.csv"
-        signals[display_columns].to_csv(output_path, index=False, encoding='utf-8-sig')
-        print(f"\n交易信号明细已保存至: {os.path.abspath(output_path)}")
+        # output_path = "trading_signals_ma20.csv"
+        # signals[display_columns].to_csv(output_path, index=False, encoding='utf-8-sig')
+        # print(f"\n交易信号明细已保存至: {os.path.abspath(output_path)}")
         
         # 打印统计信息
         print("\n=== 策略回测结果 ===")
