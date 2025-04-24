@@ -49,4 +49,29 @@ class TechnicalAnalysis:
             df.loc[mask, 'kdj_d'] = d
             df.loc[mask, 'kdj_j'] = j
             
+        return df
+
+    @staticmethod
+    def calculate_wr(df, period=14):
+        """
+        Calculate Williams %R indicator
+        period: lookback period, typically 14 days
+        Formula: WR = (Highest High - Close)/(Highest High - Lowest Low) * -100
+        """
+        df = df.copy()
+        
+        # Group by code to calculate WR for each stock
+        for code in df['code'].unique():
+            mask = df['code'] == code
+            df_stock = df[mask].copy()
+            
+            # Calculate highest high and lowest low for the period
+            high_list = df_stock['high'].rolling(window=period, min_periods=1).max()
+            low_list = df_stock['low'].rolling(window=period, min_periods=1).min()
+            
+            # Calculate Williams %R
+            wr = ((high_list - df_stock['close']) / (high_list - low_list) * -100)
+            
+            df.loc[mask, f'wr_{period}'] = wr
+            
         return df 

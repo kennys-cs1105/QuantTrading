@@ -5,8 +5,8 @@ import os
 
 def main():
     # data loader
-    stock_data_path = "/home/kennys/experiment/QuantTrading/dataset/沪深300-2024年至今数据.csv"
-    hs300_constituents_path="/home/kennys/experiment/QuantTrading/dataset/沪深300成分股.csv"
+    stock_data_path = "/home/kennys/MineX/QuantTrading/dataset/沪深300-2024年至今数据.csv"
+    hs300_constituents_path="/home/kennys/MineX/QuantTrading/dataset/沪深300成分股.csv"
     data_loader = DataLoader(stock_data_path, hs300_constituents_path)
     
     stock_data = data_loader.load_stock_data()
@@ -31,14 +31,16 @@ def main():
         # 格式化数值列
         numeric_columns = ['D1收盘价', 'D2收盘价', 'D1-D2收益率', 
                          'D1_5日均线', 'D1_20日均线', 'D1_60日均线',
-                         'D1_J值', 'D2_J值']
+                         'D1_J值', 'D2_J值', 'D1_WR14', 'D2_WR14',
+                         'D1_WR28', 'D2_WR28']
         signals[numeric_columns] = signals[numeric_columns].round(2)
         
         # 设置显示列顺序
         display_columns = ['code', 'code_name', 'D1日期', 'D2日期', 
                          'D1收盘价', 'D2收盘价', 'D1-D2收益率', 
                          'D1_5日均线', 'D1_20日均线', 'D1_60日均线',
-                         'D1_J值', 'D2_J值', '持仓天数']
+                         'D1_J值', 'D2_J值', 'D1_WR14', 'D2_WR14',
+                         'D1_WR28', 'D2_WR28', '持仓天数']
         
         # 保存结果到CSV
         # output_path = "trading_signals_ma20.csv"

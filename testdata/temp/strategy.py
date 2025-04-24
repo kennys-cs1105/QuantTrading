@@ -18,6 +18,9 @@ class TradingStrategy:
         df['ma60'] = self.ta.calculate_ma(df, window=60)
         # Calculate KDJ
         df = self.ta.calculate_kdj(df)
+        # Calculate WR
+        df = self.ta.calculate_wr(df, period=14)  # 14日WR
+        df = self.ta.calculate_wr(df, period=28)  # 28日WR
         return df
         
     def find_trading_signals(self, df):
@@ -70,6 +73,10 @@ class TradingStrategy:
                     'D1_60日均线': signal['ma60'],
                     'D1_J值': signal['kdj_j'],
                     'D2_J值': d2_data.iloc[0]['kdj_j'],
+                    'D1_WR14': signal['wr_14'],
+                    'D2_WR14': d2_data.iloc[0]['wr_14'],
+                    'D1_WR28': signal['wr_28'],
+                    'D2_WR28': d2_data.iloc[0]['wr_28'],
                     '持仓天数': (d2_date - d1_date).days
                 }
                 results.append(result)
