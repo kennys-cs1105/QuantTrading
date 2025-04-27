@@ -1,4 +1,3 @@
-import pandas as pd
 import numpy as np
 
 class TechnicalAnalysis:
@@ -74,4 +73,47 @@ class TechnicalAnalysis:
             
             df.loc[mask, f'wr_{period}'] = wr
             
+        return df 
+
+    @staticmethod
+    def calculate_macd(df, fast_period=12, slow_period=26, signal_period=9):
+        """
+        Calculate MACD indicator
+        fast_period: short EMA period (default 12)
+        slow_period: long EMA period (default 26)
+        signal_period: signal line EMA period (default 9)
+        """
+        df = df.copy()
+        for code in df['code'].unique():
+            mask = df['code'] == code
+            df_stock = df[mask].copy()
+            close = df_stock['close']
+            ema_fast = close.ewm(span=fast_period, adjust=False).mean()
+            ema_slow = close.ewm(span=slow_period, adjust=False).mean()
+            dif = ema_fast - ema_slow
+            dea = dif.ewm(span=signal_period, adjust=False).mean()
+            macd = 2 * (dif - dea)
+            df.loc[mask, 'macd_dif'] = dif.values
+            df.loc[mask, 'macd_dea'] = dea.values
+            df.loc[mask, 'macd'] = macd.values
+        return df
+
+    @staticmethod
+    def calculate_boll(df, window=20, num_std=2):
+        """
+        Calculate Bollinger Bands (BOLL)
+        window: moving average window (default 20)
+        num_std: number of standard deviations (default 2)
+        """
+        df = df.copy()
+        for code in df['code'].unique():
+            mask = df['code'] == code
+            df_stock = df[mask].copy()
+            mid = df_stock['close'].rolling(window=window, min_periods=1).mean()
+            std = df_stock['close'].rolling(window=window, min_periods=1).std()
+            upper = mid + num_std * std
+            lower = mid - num_std * std
+            df.loc[mask, f'boll_mid_{window}'] = mid.values
+            df.loc[mask, f'boll_upper_{window}'] = upper.values
+            df.loc[mask, f'boll_lower_{window}'] = lower.values
         return df 

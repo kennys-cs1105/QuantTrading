@@ -18,6 +18,9 @@ class TradingStrategy:
         df['ma60'] = self.ta.calculate_ma(df, window=60)
         # Calculate KDJ
         df = self.ta.calculate_kdj(df)
+
+        df = self.ta.calculate_wr(df, period=14)  # 14日WR
+        df = self.ta.calculate_wr(df, period=28)  # 28日WR
         return df
         
     def find_trading_signals(self, df):
@@ -37,6 +40,7 @@ class TradingStrategy:
         
         # Create trading signals with selected columns
         signals = df[df['above_ma20'] & df['j_turns_negative']].copy()
+        # signals = df[df['j_turns_negative']].copy()
         
         # Select and rename columns for better readability
         selected_signals = signals[[
