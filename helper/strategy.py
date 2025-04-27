@@ -277,11 +277,11 @@ class TradingStrategyC:
         # Create initial signals when J turns negative (D1)
         signals = df[df[f'above_{ma_type}'] & df['j_turns_negative']].copy()
         
-        print("\n=== 策略C调试信息 ===")
-        print(f"初始信号数量: {len(signals)}")
-        if len(signals) > 0:
-            print("\n初始信号示例:")
-            print(signals[['code', 'date', 'close', 'kdj_j', 'prev_j']].head())
+        # print("\n=== 策略C调试信息 ===")
+        # print(f"初始信号数量: {len(signals)}")
+        # if len(signals) > 0:
+        #     print("\n初始信号示例:")
+        #     print(signals[['code', 'date', 'close', 'kdj_j', 'prev_j']].head())
         
         # For each D1 signal, find the corresponding D2 (when J turns positive)
         results = []
